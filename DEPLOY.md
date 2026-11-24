@@ -112,7 +112,7 @@ El repo ya trae un archivo `netlify.toml` con lo necesario (comando de compilaci
 
 | Campo | Valor |
 |---|---|
-| Build command | `cd frontend && npm ci && npm run build` |
+| Build command | `cd frontend && npm install && npm run build` |
 | Publish directory | `frontend/dist` |
 
 4. **Agregá la variable de entorno** (**Add environment variables**, o después en *Site configuration → Environment variables*):
@@ -143,7 +143,8 @@ Abrí tu web. Tendría que mostrar las actividades, el clima y el mapa. Probá e
 |---|---|---|
 | La web muestra "No pudimos cargar las actividades" | La API no le responde a la web | Abrí la consola del navegador (F12). Si dice **CORS**, revisá `CORS_ORIGINS` en Render (exacto, `https://`, sin barra final). Si dice **404** o no encuentra el servidor, revisá `VITE_API_URL` en Netlify. |
 | Cambié `VITE_API_URL` y sigue igual | El valor se "graba" al compilar la web | En Netlify: **Deploys → Trigger deploy → Clear cache and deploy site**. |
-| El deploy de Netlify falla | Mirá el registro del deploy (log) | Suele ser Node o una dependencia: el log lo dice. Verificá que `netlify.toml` esté en la raíz del repo. |
+| El deploy de Netlify falla | Mirá el registro del deploy (log) | El log dice el motivo. Verificá que `netlify.toml` esté en la raíz del repo. |
+| Netlify falla con `npm ci can only install packages when your package.json and package-lock.json… are in sync` | El `package-lock.json` hecho en Mac no trae unos paquetes que Linux necesita | El comando de build tiene que usar `npm install` (no `npm ci`), como está en `netlify.toml`. |
 | La web queda vacía o con "Page not found" | Se publicó una carpeta equivocada | En el log del deploy tiene que decir que publicó `frontend/dist`. |
 | La lista de actividades está vacía | Falta el paso 3 | Corré el comando de carga contra Neon. |
 | `/api/ping` anda pero `/api/health` da error | Problema con la base | Revisá `DATABASE_URL` en Render: volvé a copiarla de Neon. |

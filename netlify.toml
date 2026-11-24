@@ -6,7 +6,11 @@
 # propósito: así las rutas son siempre relativas a la raíz del repo y no hay ambigüedad.
 
 [build]
-  command = "cd frontend && npm ci && npm run build"
+  # Se usa "npm install" y NO "npm ci" a propósito: el package-lock.json se genera en una Mac y
+  # le faltan unos paquetes que Linux necesita (@emnapi/*, de Vite 8). "npm ci" es estricto y
+  # falla en Netlify con "package.json and package-lock.json are not in sync"; "npm install"
+  # los completa solo. Probado en Linux con Node 22 y npm 10.
+  command = "cd frontend && npm install && npm run build"
   publish = "frontend/dist"
 
 [build.environment]
