@@ -1,0 +1,212 @@
+.map-wrap {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+.map {
+  width: 100%;
+  height: 100%;
+  background: var(--map-bg);
+  font-family: var(--font);
+}
+
+/* Modo oscuro: los mosaicos de OpenStreetMap son claros, así que se invierten (con el tono
+   corregido para que el agua siga siendo azulada) y se les baja un poco el brillo. */
+:root[data-theme='dark'] .leaflet-tile-pane {
+  filter: invert(1) hue-rotate(180deg) brightness(0.95) contrast(0.9) saturate(0.85);
+}
+
+/* Controles de Leaflet (zoom, atribución) con los colores del tema */
+.leaflet-bar a,
+.leaflet-bar a:hover {
+  border-color: var(--line);
+  background-color: var(--surface);
+  color: var(--ink);
+}
+
+.leaflet-bar a:hover {
+  background-color: var(--surface-2);
+}
+
+.leaflet-bar a.leaflet-disabled {
+  background-color: var(--surface-2);
+  color: var(--muted);
+}
+
+.leaflet-container .leaflet-control-attribution {
+  background: color-mix(in srgb, var(--surface) 80%, transparent);
+  color: var(--muted);
+}
+
+.leaflet-control-attribution a {
+  color: var(--accent);
+}
+
+/* ── Pines (hechos con CSS) ───────────────────────────────────────── */
+.pin {
+  background: none;
+  border: 0;
+}
+
+.pin__body {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border: 3px solid #fff;
+  border-radius: 50% 50% 50% 0; /* la punta queda abajo al girar -45° */
+  background: var(--cat-ink);
+  box-shadow: 0 3px 8px rgb(0 0 0 / 0.3);
+  transform: rotate(-45deg);
+  transition: transform 0.15s;
+}
+
+.pin__icon {
+  display: grid;
+  color: #fff;
+  font-size: 15px;
+  line-height: 1;
+  transform: rotate(45deg); /* contrarresta el giro del pin para que el ícono quede derecho */
+}
+
+.pin--active .pin__body {
+  transform: rotate(-45deg) scale(1.3);
+  box-shadow: 0 0 0 3px var(--ink), 0 6px 14px rgb(0 0 0 / 0.35);
+}
+
+/* Burbuja de grupo: varias actividades muy cerca entre sí */
+.cluster {
+  background: none;
+  border: 0;
+}
+
+.cluster span {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border: 3px solid #fff;
+  border-radius: 50%;
+  background: var(--violet);
+  box-shadow: 0 0 0 6px rgb(95 20 237 / 0.25), 0 4px 10px rgb(0 0 0 / 0.3);
+  color: #fff;
+  font-size: 1.05rem;
+  font-weight: 800;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.leaflet-tooltip {
+  padding: 6px 10px;
+  border: 0;
+  border-radius: 10px;
+  background: var(--surface);
+  box-shadow: var(--shadow);
+  color: var(--ink);
+  font-family: var(--font);
+  font-weight: 800;
+}
+
+/* la flechita del globo de texto */
+.leaflet-tooltip-top::before {
+  border-top-color: var(--surface);
+}
+
+.leaflet-marker-icon:focus-visible {
+  outline: none;
+}
+
+.leaflet-marker-icon:focus-visible .pin__body {
+  box-shadow: 0 0 0 3px var(--ink);
+}
+
+/* ── Ficha de la actividad elegida, sobre el mapa ─────────────────── */
+.map-selected {
+  position: absolute;
+  right: 12px;
+  bottom: 28px; /* deja ver la atribución de OpenStreetMap */
+  left: 12px;
+  z-index: 1100;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: 16px;
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+
+.map-selected__icon {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--cat) 16%, var(--surface));
+  color: var(--cat-fg);
+  font-size: 1.2rem;
+}
+
+.map-selected__text {
+  flex: 1;
+  min-width: 0;
+}
+
+.map-selected__title {
+  font-weight: 800;
+  line-height: 1.25;
+}
+
+.map-selected__meta {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--muted);
+}
+
+.map-selected__text a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+  font-size: 0.88rem;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.map-selected__text a svg {
+  font-size: 0.8em;
+}
+
+.map-selected__text a:hover {
+  text-decoration: underline;
+}
+
+.map-selected__close {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border: 0;
+  border-radius: 50%;
+  background: var(--surface-2);
+  color: var(--muted);
+  cursor: pointer;
+}
+
+.map-selected__close:hover {
+  background: var(--violet-soft);
+  color: var(--accent-strong);
+}

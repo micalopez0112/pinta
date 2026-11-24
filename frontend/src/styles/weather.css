@@ -1,0 +1,136 @@
+.weather {
+  padding: 24px;
+  border-radius: 28px;
+  background: linear-gradient(160deg, #6a22f5 0%, #4a0fc4 100%);
+  color: #fff;
+  box-shadow: var(--shadow);
+}
+
+.weather :focus-visible {
+  outline-color: #fff;
+}
+
+.weather a {
+  color: #fff;
+}
+
+.weather--empty {
+  display: grid;
+  place-items: center;
+  gap: 14px;
+  min-height: 220px;
+  text-align: center;
+  font-weight: 700;
+}
+
+.weather__label {
+  margin-bottom: 10px;
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  opacity: 0.85;
+}
+
+.weather__main {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.weather__icon {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 4.2rem;
+  color: #fff;
+  font-size: 3.4rem;
+  line-height: 1;
+}
+
+/* De día, el sol (y el sol con nubes) se ve cálido. */
+.weather__icon[data-day='true'][data-icon='clear'],
+.weather__icon[data-day='true'][data-icon='partly'] {
+  color: #ffc247;
+}
+
+.weather__temp {
+  font-size: 3.4rem;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.03em;
+}
+
+.weather__condition {
+  margin-top: 4px;
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+
+.weather__feel {
+  margin: 12px 0 16px;
+  opacity: 0.9;
+}
+
+.weather__stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.weather__stats div {
+  padding: 10px 12px;
+  border-radius: var(--radius-sm);
+  background: rgb(255 255 255 / 0.14);
+}
+
+.weather__stats dt {
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  opacity: 0.85;
+}
+
+.weather__stats dd {
+  font-weight: 800;
+}
+
+.weather__tip {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  background: var(--orange);
+  color: #1f1a33; /* oscuro fijo: va sobre naranja, tanto de día como de noche */
+  font-weight: 800;
+}
+
+.weather__tip button {
+  padding: 0.4em 0.9em;
+  border: 0;
+  border-radius: 999px;
+  background: #1f1a33;
+  color: #fff;
+  font-size: 0.88rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.weather__tip button:hover {
+  background: #000;
+}
+
+.weather__tip :focus-visible {
+  outline-color: #1f1a33;
+}
+
+.weather__source {
+  margin-top: 14px;
+  font-size: 0.8rem;
+  opacity: 0.85;
+}

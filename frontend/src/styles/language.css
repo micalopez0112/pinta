@@ -1,0 +1,98 @@
+/* Selector de idioma (arriba a la derecha): bandera + sigla, con menú desplegable */
+.lang {
+  position: relative;
+}
+
+.flag {
+  flex: none;
+  width: 24px;
+  height: 16px;
+  border-radius: 3px;
+  box-shadow: 0 0 0 1px rgb(31 26 51 / 0.18); /* borde fino: se distinguen las banderas blancas sobre blanco */
+}
+
+.lang__button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0.4em 0.75em;
+  border: 1.5px solid var(--line);
+  border-radius: 999px;
+  background: var(--surface);
+  font-weight: 800;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+}
+
+.lang__button:hover,
+.lang__button[aria-expanded='true'] {
+  border-color: var(--accent);
+}
+
+.lang__code {
+  font-size: 0.85rem;
+  letter-spacing: 0.04em;
+}
+
+.lang__chevron {
+  font-size: 0.7rem;
+  color: var(--muted);
+  transition: transform 0.15s;
+}
+
+.lang__button[aria-expanded='true'] .lang__chevron {
+  transform: rotate(180deg);
+}
+
+.lang__menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  z-index: 10;
+  min-width: 210px;
+  margin: 0;
+  padding: 6px;
+  list-style: none;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+
+.lang__option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 0.6em 0.75em;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  font-weight: 700;
+  text-align: left;
+  cursor: pointer;
+}
+
+.lang__option:hover,
+.lang__option[aria-current='true'] {
+  background: var(--violet-soft);
+}
+
+.lang__option[aria-current='true'] {
+  color: var(--accent-strong);
+  font-weight: 800;
+}
+
+.lang__name {
+  flex: 1;
+}
+
+.lang__option .lang__code {
+  color: var(--muted);
+}
+
+.lang__check {
+  flex: none;
+  font-size: 0.8rem;
+  color: var(--accent);
+}

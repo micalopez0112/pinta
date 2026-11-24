@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Pinta te cuenta qué hacer en Punta del Este: playas, paseos, arte, naturaleza y dónde comer, con el clima de hoy y un mapa."
+    />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="theme-color" content="#5f14ed" />
+    <!-- Fija el tema (claro/oscuro) ANTES de pintar la página, para que no haya un destello del
+         tema equivocado. Prioridad: lo que la persona eligió con el botón, o el de su sistema.
+         La misma regla vive en src/theme.js. -->
+    <script>
+      (function () {
+        var theme = null
+        try {
+          theme = localStorage.getItem('pinta.theme')
+        } catch (e) {}
+        if (theme !== 'light' && theme !== 'dark') {
+          theme = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+        }
+        document.documentElement.dataset.theme = theme
+        if (theme === 'dark') {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#121019')
+        }
+      })()
+    </script>
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Nunito:wght@500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <title>Pinta · Qué hacer en Punta del Este</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>

@@ -1,0 +1,25 @@
+/* Botón de modo claro / oscuro (barra superior) */
+.theme-toggle {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border: 1.5px solid var(--line);
+  border-radius: 50%;
+  background: var(--surface);
+  color: var(--ink);
+  font-size: 1rem;
+  cursor: pointer;
+  transition: border-color 0.15s, color 0.15s;
+}
+
+.theme-toggle:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+/* el sol (modo oscuro) en naranja, como el del logo */
+:root[data-theme='dark'] .theme-toggle {
+  color: var(--orange);
+}

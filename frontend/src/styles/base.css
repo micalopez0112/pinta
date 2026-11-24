@@ -1,0 +1,268 @@
+/* ── Variables de marca y de tema ─────────────────────────────────────
+   Los colores NO se escriben a mano en los otros .css: se usan estas variables, así el modo
+   oscuro (más abajo) solo tiene que cambiar los valores. El tema se elige con el atributo
+   data-theme="light" | "dark" en <html> (lo pone index.html antes de pintar y el botón de
+   la barra superior). */
+:root {
+  color-scheme: light;
+
+  --violet: #5f14ed; /* del logo: fondos (botones, filtro activo) */
+  --violet-dark: #4a0fc4; /* el mismo, al pasar el mouse */
+  --violet-soft: #f0eaff; /* fondo suave */
+  --accent: #5f14ed; /* violeta para texto, enlaces y bordes sobre el fondo de la página */
+  --accent-strong: #4a0fc4; /* texto sobre --violet-soft */
+  --orange: #f59914; /* del logo */
+  --orange-soft: #fff0d6;
+
+  --ink: #1f1a33;
+  --ink-soft: #3d3856;
+  --muted: #625d78;
+  --bg: #fbf8f3;
+  --surface: #ffffff;
+  --surface-2: #f2f0f7;
+  --line: #e8e2f3;
+  --header-bg: rgb(255 255 255 / 0.9);
+  --map-bg: #e9e4f5;
+
+  --free-bg: #dff5ea;
+  --free-fg: #0b6b4b;
+  --indoor-fg: #8a4b00;
+
+  /* Categorías. --X: color suave (fondos). --X-ink: color fuerte (pines, con ícono blanco).
+     --X-fg: color del ícono sobre un fondo suave (más claro en el modo oscuro). */
+  --playa: #f59914;
+  --playa-ink: #c77a00;
+  --playa-fg: #c77a00;
+  --paseo: #5f14ed;
+  --paseo-ink: #5f14ed;
+  --paseo-fg: #5f14ed;
+  --cultura: #e0457b;
+  --cultura-ink: #cf3a72;
+  --cultura-fg: #cf3a72;
+  --naturaleza: #17a373;
+  --naturaleza-ink: #0f8a62;
+  --naturaleza-fg: #0f8a62;
+  --restaurante: #e03131;
+  --restaurante-ink: #c92a2a;
+  --restaurante-fg: #c92a2a;
+  --supermercado: #339af0;
+  --supermercado-ink: #1c7ed6;
+  --supermercado-fg: #1c7ed6;
+
+  --radius: 20px;
+  --radius-sm: 12px;
+  --shadow-sm: 0 1px 2px rgb(31 26 51 / 0.06), 0 2px 8px rgb(31 26 51 / 0.05);
+  --shadow: 0 2px 4px rgb(31 26 51 / 0.05), 0 12px 32px rgb(31 26 51 / 0.1);
+
+  --font: 'Nunito', ui-rounded, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --header-h: 68px;
+}
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
+
+  --violet-dark: #7a45f3;
+  --violet-soft: #2a2250;
+  --accent: #b8a1ff;
+  --accent-strong: #d9ccff;
+  --orange-soft: #3a2a12;
+
+  --ink: #f0edfa;
+  --ink-soft: #cdc8e0;
+  --muted: #a39dbd;
+  --bg: #121019;
+  --surface: #1c1929;
+  --surface-2: #2a2640;
+  --line: #342f4d;
+  --header-bg: rgb(18 16 25 / 0.88);
+  --map-bg: #1c1929;
+
+  --free-bg: #123629;
+  --free-fg: #7fe3b5;
+  --indoor-fg: #ffcf8a;
+
+  --playa-fg: #ffb84d;
+  --paseo-fg: #b9a2ff;
+  --cultura-fg: #ff8fb3;
+  --naturaleza-fg: #5fd9a8;
+  --restaurante-fg: #ff8a8a;
+  --supermercado-fg: #74c0fc;
+
+  --shadow-sm: 0 1px 2px rgb(0 0 0 / 0.4), 0 2px 8px rgb(0 0 0 / 0.3);
+  --shadow: 0 2px 4px rgb(0 0 0 / 0.35), 0 12px 32px rgb(0 0 0 / 0.5);
+}
+
+/* Categorías: todo elemento con data-category (tarjeta, ficha del mapa) o con clase pin--*
+   recibe --cat (color suave), --cat-ink (color fuerte, para pines) y --cat-fg (ícono sobre fondo suave). */
+[data-category],
+.pin {
+  --cat: var(--paseo);
+  --cat-ink: var(--paseo-ink);
+  --cat-fg: var(--paseo-fg);
+}
+
+[data-category='playa'],
+.pin--playa {
+  --cat: var(--playa);
+  --cat-ink: var(--playa-ink);
+  --cat-fg: var(--playa-fg);
+}
+
+[data-category='paseo'],
+.pin--paseo {
+  --cat: var(--paseo);
+  --cat-ink: var(--paseo-ink);
+  --cat-fg: var(--paseo-fg);
+}
+
+[data-category='cultura'],
+.pin--cultura {
+  --cat: var(--cultura);
+  --cat-ink: var(--cultura-ink);
+  --cat-fg: var(--cultura-fg);
+}
+
+[data-category='naturaleza'],
+.pin--naturaleza {
+  --cat: var(--naturaleza);
+  --cat-ink: var(--naturaleza-ink);
+  --cat-fg: var(--naturaleza-fg);
+}
+
+[data-category='restaurante'],
+.pin--restaurante {
+  --cat: var(--restaurante);
+  --cat-ink: var(--restaurante-ink);
+  --cat-fg: var(--restaurante-fg);
+}
+
+[data-category='supermercado'],
+.pin--supermercado {
+  --cat: var(--supermercado);
+  --cat-ink: var(--supermercado-ink);
+  --cat-fg: var(--supermercado-fg);
+}
+
+/* ── Reset mínimo ─────────────────────────────────────────────────── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: calc(var(--header-h) + 8px);
+}
+
+body {
+  margin: 0;
+  font-family: var(--font);
+  font-size: 1rem;
+  line-height: 1.55;
+  color: var(--ink);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+h1,
+h2,
+h3,
+p,
+dl,
+dd {
+  margin: 0;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+}
+
+a {
+  color: var(--accent);
+}
+
+:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.container {
+  width: min(1200px, 100% - 32px);
+  margin-inline: auto;
+}
+
+/* ── Botones ──────────────────────────────────────────────────────── */
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 0.8em 1.5em;
+  border: 2px solid var(--violet);
+  border-radius: 999px;
+  background: var(--violet);
+  color: #fff;
+  font-weight: 800;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s, transform 0.15s;
+}
+
+.button:hover {
+  background: var(--violet-dark);
+  border-color: var(--violet-dark);
+}
+
+.button:active {
+  transform: translateY(1px);
+}
+
+.button--small {
+  padding: 0.45em 1em;
+  font-size: 0.9rem;
+}
+
+.button--ghost {
+  border-color: var(--accent);
+  background: transparent;
+  color: var(--accent);
+}
+
+.button--ghost:hover {
+  background: var(--violet-soft);
+  border-color: var(--accent);
+}
+
+/* Botón blanco sobre la tarjeta violeta del clima: no cambia con el tema. */
+.button--light {
+  background: #fff;
+  border-color: #fff;
+  color: #4a0fc4;
+}
+
+.button--light:hover {
+  background: #f0eaff;
+  border-color: #f0eaff;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

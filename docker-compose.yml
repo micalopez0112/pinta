@@ -1,0 +1,27 @@
+# Base de datos local para desarrollo.
+#   docker compose up -d     -> levanta Postgres en localhost:5434
+#   docker compose down      -> la apaga (los datos quedan en el volumen)
+#   docker compose down -v   -> la apaga y BORRA los datos
+services:
+  db:
+    image: postgres:17
+    container_name: pinta-db
+    environment:
+      POSTGRES_USER: pinta
+      POSTGRES_PASSWORD: pinta
+      POSTGRES_DB: pinta
+    ports:
+      # Puerto 5434 afuera (5432 adentro) para no chocar con otros Postgres de tu máquina.
+      # Si tampoco está libre: PINTA_DB_PORT=5439 docker compose up -d
+      # (y ajustá DATABASE_URL en backend/.env).
+      - "${PINTA_DB_PORT:-5434}:5432"
+    volumes:
+      - pinta_db:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U pinta -d pinta"]
+      interval: 3s
+      timeout: 3s
+      retries: 20
+
+volumes:
+  pinta_db:
