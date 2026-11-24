@@ -1,0 +1,17 @@
+# Configuración de Netlify para la web (el frontend). Netlify lee este archivo al desplegar y
+# lo que diga acá manda sobre lo que se complete en su panel.
+#
+# El proyecto tiene tres carpetas (backend, frontend, design) y la web vive en "frontend",
+# así que el comando entra ahí y se publica "frontend/dist". No se usa la opción "base" a
+# propósito: así las rutas son siempre relativas a la raíz del repo y no hay ambigüedad.
+
+[build]
+  command = "cd frontend && npm ci && npm run build"
+  publish = "frontend/dist"
+
+[build.environment]
+  # Vite 8 necesita Node 20.19+ o 22.12+.
+  NODE_VERSION = "22"
+
+# La dirección de la API (VITE_API_URL) NO va acá: se carga en el panel de Netlify
+# (Site configuration → Environment variables), porque depende de tu servicio de Render.

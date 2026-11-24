@@ -6,7 +6,7 @@ Tres servicios gratuitos, uno por parte del proyecto:
 |---|---|---|
 | Base de datos | **Neon** | Postgres |
 | API (FastAPI) | **Render** | el backend |
-| Web (React) | **Cloudflare Pages** | lo que ve la gente |
+| Web (React) | **Netlify** | lo que ve la gente |
 
 Los tres se pueden crear con tu cuenta de GitHub ("Continue with GitHub") y ninguno pide tarjeta. **Hacelo en este orden**, porque cada paso necesita un dato del anterior.
 
@@ -23,13 +23,13 @@ gh auth login            # GitHub.com → HTTPS → "Yes" a autenticar git → "
 cd /Users/micaelalopez/Documents/pinta
 git init -b main
 git add .
-git status               # revisá la lista: unos 63 archivos, y NINGUNO .env, .venv ni node_modules
+git status               # revisá la lista: unos 66 archivos, y NINGUNO .env, .venv ni node_modules
 git commit -m "Primera versión de Pinta"
 git remote add origin https://github.com/micalopez0112/pinta.git
 git push -u origin main
 ```
 
-Abrí <https://github.com/micalopez0112/pinta> y comprobá que están las carpetas `backend`, `frontend` y los archivos `README.md` y `DEPLOY.md`.
+Abrí <https://github.com/micalopez0112/pinta> y comprobá que están las carpetas `backend` y `frontend` y los archivos `README.md`, `DEPLOY.md` y `netlify.toml`.
 
 **Tu email en los commits:** git usa el que tenés configurado (`git config --global user.email`). Si no es el de tu cuenta de GitHub, los commits no quedan vinculados a tu perfil, y si el repo es público ese email se ve en el historial. Podés usar el email privado de GitHub (`ID+usuario@users.noreply.github.com`, en Settings → Emails) con `git config --global user.email "ese-email"`.
 
@@ -53,11 +53,22 @@ cd /Users/micaelalopez/Documents/pinta/backend
 DATABASE_URL='PEGÁ-ACÁ-LA-CADENA-DE-NEON' .venv/bin/python -m app.seed
 ```
 
-Las **comillas simples** son obligatorias (la cadena tiene símbolos como `&`). Tiene que decir:
+Para no equivocarte:
+
+- **`DATABASE_URL='…'` va adelante del comando, en la misma línea.** Si lo olvidás, el programa carga tu base local (la de Docker) y no la de Neon, y Neon queda vacía.
+- Las **comillas simples** son obligatorias (la cadena tiene símbolos como `&`).
+- Pegá solo la dirección, que empieza con `postgresql://`. Neon a veces la muestra dentro de un comando `psql '…'`: copiá solamente lo que está entre las comillas.
+
+**Mirá las líneas que imprime.** Tienen que mostrar la dirección de Neon, algo así:
 
 ```
-Listo: 1 destino(s) y 23 actividad(es) cargadas.
+Base de datos: ep-nombre-123456.us-east-1.aws.neon.tech/neondb
+Listo: 1 destino(s) y 23 actividad(es) cargadas en ep-nombre-123456.us-east-1.aws.neon.tech/neondb.
 ```
+
+Si en cambio dice `localhost:5434/pinta`, cargaste la base local: volvé a correrlo con `DATABASE_URL='…'` adelante.
+
+Para confirmar, en Neon abrí **SQL Editor** y corré `select count(*) from activities;`: tiene que dar 23.
 
 ---
 
@@ -91,24 +102,25 @@ Anotá esa dirección: la necesitás en el paso siguiente.
 
 ---
 
-## 5. La web en Cloudflare Pages
+## 5. La web en Netlify
 
-1. Entrá a <https://dash.cloudflare.com> y creá la cuenta (gratis).
-2. **Workers & Pages** → **Create** → **Pages** → **Connect to Git** → elegí el repo `pinta`.
-3. Completá así:
+El repo ya trae un archivo `netlify.toml` con lo necesario (comando de compilación, carpeta a publicar y versión de Node), así que casi no hay nada que completar.
+
+1. Entrá a <https://app.netlify.com> y creá la cuenta (con GitHub).
+2. **Add new project** (en algunas pantallas dice "Add new site") → **Import an existing project** → **GitHub** → autorizá y elegí el repo `pinta`.
+3. Netlify muestra la configuración de compilación. Tiene que coincidir con esto (viene del `netlify.toml`; si algún campo aparece vacío o distinto, el archivo manda sobre el panel):
 
 | Campo | Valor |
 |---|---|
-| Project name | `pinta` (la web quedará en `https://pinta.pages.dev`; si el nombre está tomado, Cloudflare agrega un sufijo) |
-| Production branch | `main` |
-| Framework preset | `None` |
-| Build command | `npm run build` |
-| Build output directory | `dist` |
-| Root directory (Advanced) | `frontend` |
+| Build command | `cd frontend && npm ci && npm run build` |
+| Publish directory | `frontend/dist` |
 
-4. **Environment variables** → agregá:
+4. **Agregá la variable de entorno** (**Add environment variables**, o después en *Site configuration → Environment variables*):
    - `VITE_API_URL` = `https://pinta-api-xxxx.onrender.com/api`  ← la dirección de Render **terminada en `/api`**, sin barra al final.
-5. **Save and Deploy**. Al terminar te muestra la dirección de tu web.
+
+   Hacelo **antes del primer deploy**. Si la agregás después, hay que volver a desplegar (ver "Si algo falla").
+5. **Deploy**. Cuando termine, te da una dirección tipo `https://nombre-raro-123.netlify.app`.
+6. **Cambiale el nombre** para tener una dirección linda: *Site configuration → General → Site details → Change site name* → por ejemplo `pinta` (queda `https://pinta.netlify.app`; si está tomado, probá otro). Anotá la dirección final: se usa en el paso siguiente.
 
 ---
 
@@ -116,7 +128,7 @@ Anotá esa dirección: la necesitás en el paso siguiente.
 
 Por seguridad, la API solo acepta pedidos de las direcciones que le avises. En Render:
 
-1. Tu servicio `pinta-api` → **Environment** → agregá `CORS_ORIGINS` = `https://pinta.pages.dev` (la dirección **exacta** de tu web, sin barra final).
+1. Tu servicio `pinta-api` → **Environment** → agregá `CORS_ORIGINS` = `https://pinta.netlify.app` (la dirección **exacta** de tu web, con `https://` y sin barra final).
 2. **Save**: Render reinicia la API solo.
 
 Abrí tu web. Tendría que mostrar las actividades, el clima y el mapa. Probá el selector de idioma y el botón de modo oscuro.
@@ -129,8 +141,10 @@ Abrí tu web. Tendría que mostrar las actividades, el clima y el mapa. Probá e
 
 | Qué ves | Causa probable | Qué hacer |
 |---|---|---|
-| La web muestra "No pudimos cargar las actividades" | La API no le responde a la web | Abrí la consola del navegador (F12). Si dice **CORS**, revisá `CORS_ORIGINS` (exacto, `https://`, sin barra final). Si dice **404** o no encuentra el servidor, revisá `VITE_API_URL`. |
-| Cambié `VITE_API_URL` y sigue igual | El valor se "graba" al compilar la web | En Cloudflare, **Deployments → Retry deployment** (o hacé un push nuevo). |
+| La web muestra "No pudimos cargar las actividades" | La API no le responde a la web | Abrí la consola del navegador (F12). Si dice **CORS**, revisá `CORS_ORIGINS` en Render (exacto, `https://`, sin barra final). Si dice **404** o no encuentra el servidor, revisá `VITE_API_URL` en Netlify. |
+| Cambié `VITE_API_URL` y sigue igual | El valor se "graba" al compilar la web | En Netlify: **Deploys → Trigger deploy → Clear cache and deploy site**. |
+| El deploy de Netlify falla | Mirá el registro del deploy (log) | Suele ser Node o una dependencia: el log lo dice. Verificá que `netlify.toml` esté en la raíz del repo. |
+| La web queda vacía o con "Page not found" | Se publicó una carpeta equivocada | En el log del deploy tiene que decir que publicó `frontend/dist`. |
 | La lista de actividades está vacía | Falta el paso 3 | Corré el comando de carga contra Neon. |
 | `/api/ping` anda pero `/api/health` da error | Problema con la base | Revisá `DATABASE_URL` en Render: volvé a copiarla de Neon. |
 | El deploy de Render falla por la versión de Python | Render usa una versión distinta de Python | Agregá la variable `PYTHON_VERSION` = `3.13.5` en Render y redeployá. |
@@ -155,7 +169,7 @@ https://pinta-api-xxxx.onrender.com/api/ping
 
 - **Render:** 750 horas por mes, la API se duerme a los 15 minutos sin tráfico. Render dice que el plan gratis no es para producción. **No uses su Postgres gratis**: expira a los 30 días y borra los datos.
 - **Neon:** 1 GB de almacenamiento y 100 horas de cómputo por proyecto (según su FAQ). La base de Pinta usa casi nada.
-- **Cloudflare Pages:** ancho de banda ilimitado y 500 compilaciones por mes.
+- **Netlify:** el plan gratis da **300 créditos por mes** y es un tope duro (no se cobra de más). Según su página de precios, cada **deploy a producción cuesta unos 15 créditos** y cada GB de transferencia unos 20. Con una web de ~180 KB por visita, 300 créditos alcanzan para miles de visitas al mes, **pero solo para unos 20 deploys**: cada `git push` a `main` dispara uno, así que conviene juntar varios cambios en un solo push. Si se acaba el cupo, el sitio puede pausarse hasta el mes siguiente. Confirmá estos números en el panel de Netlify (*Usage*).
 - **Open-Meteo (el clima)** es gratis solo para uso no comercial, y los mapas de OpenStreetMap son para poco tráfico. Si Pinta pasa a ser un negocio o crece, hay que cambiar de proveedor de clima y de mapas, y pasar la API a un plan pago.
 - Estos planes cambian: antes de depender de ellos, revisá las páginas de precios de cada servicio.
 
@@ -171,8 +185,8 @@ git commit -m "Describí el cambio"
 git push
 ```
 
-Render y Cloudflare vuelven a compilar. Si cambiaste las actividades (`seed_data.py` o `seed_translations.py`), **repetí el paso 3** para actualizar la base de Neon.
+Render y Netlify vuelven a compilar (Netlify gasta créditos en cada deploy: ver arriba). Si cambiaste las actividades (`seed_data.py` o `seed_translations.py`), **repetí el paso 3** para actualizar la base de Neon.
 
 ## Dominio propio (opcional)
 
-En Cloudflare Pages → tu proyecto → **Custom domains**. Después, en Render, agregá la dirección nueva a `CORS_ORIGINS` separada por coma: `https://pinta.pages.dev,https://tudominio.com`.
+En Netlify → **Domain management → Add a domain**. Después, en Render, agregá la dirección nueva a `CORS_ORIGINS` separada por coma: `https://pinta.netlify.app,https://tudominio.com`.

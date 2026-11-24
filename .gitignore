@@ -12,3 +12,5 @@ dist/
 .env
 .DS_Store
 .claude/
+
+backend/.env.prod

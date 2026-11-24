@@ -11,6 +11,7 @@ por ejemplo si se agregó una columna: hoy no hay migraciones.)
 import argparse
 
 from sqlalchemy import select
+from sqlalchemy.engine import URL
 from sqlalchemy.orm import Session
 
 from . import models
@@ -51,10 +52,21 @@ def seed(db: Session) -> tuple[int, int]:
     return destinations, activities
 
 
+def describe_database(url: URL) -> str:
+    """Servidor y nombre de la base, SIN usuario ni contraseña: "ep-abc.neon.tech/neondb"."""
+    port = f":{url.port}" if url.port else ""
+    return f"{url.host or url.drivername}{port}/{url.database or ''}"
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description="Carga las actividades iniciales.")
     parser.add_argument("--reset", action="store_true", help="borra y recrea las tablas antes de cargar")
     args = parser.parse_args()
+
+    # Lo primero que se imprime es EN QUÉ base se va a trabajar: sin DATABASE_URL se usa la base
+    # local de desarrollo, y esto evita creer que se cargó la de producción cuando no fue así.
+    target = describe_database(engine.url)
+    print(f"Base de datos: {target}")
 
     if args.reset:
         Base.metadata.drop_all(engine)
@@ -62,7 +74,7 @@ def main() -> None:
     Base.metadata.create_all(engine)
     with SessionLocal() as db:
         destinations, activities = seed(db)
-    print(f"Listo: {destinations} destino(s) y {activities} actividad(es) cargadas.")
+    print(f"Listo: {destinations} destino(s) y {activities} actividad(es) cargadas en {target}.")
 
 
 if __name__ == "__main__":

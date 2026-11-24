@@ -51,7 +51,7 @@ Abrí <http://localhost:5173>. En desarrollo, Vite reenvía `/api` al backend, a
 
 ## Publicarlo gratis
 
-Neon (base) + Render (API) + Cloudflare Pages (web): la guía paso a paso está en [DEPLOY.md](DEPLOY.md).
+Neon (base) + Render (API) + Netlify (web): la guía paso a paso está en [DEPLOY.md](DEPLOY.md).
 
 ## Estructura
 
